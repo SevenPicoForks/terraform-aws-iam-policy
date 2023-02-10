@@ -1,5 +1,5 @@
 locals {
-  enabled = module.this.enabled
+  enabled = module.context.enabled
 
   iam_source_json_url_body = var.iam_source_json_url != null || var.iam_source_json_url == "" ? data.http.iam_source_json_url[0].response_body : ""
 
@@ -74,8 +74,8 @@ data "aws_iam_policy_document" "this" {
 resource "aws_iam_policy" "default" {
   count = local.enabled && var.iam_policy_enabled ? 1 : 0
 
-  name        = module.this.id
+  name        = module.context.id
   description = var.description
   policy      = join("", data.aws_iam_policy_document.this.*.json)
-  tags        = module.this.tags
+  tags        = module.context.tags
 }
